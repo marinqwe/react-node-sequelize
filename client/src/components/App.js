@@ -1,32 +1,33 @@
 import React, { Component } from 'react';
+import {getData} from './Axios';
 
 class App extends Component {
   state = {
-    response: ''
+    todos: [],
+    inputValue: ''
   };
 
   componentDidMount() {
-    this.callApi()
-      .then(res => this.setState({ response: res.express }))
-      .catch(err => console.log(err));
+    const url = 'todos';
+    getData(url).then(res => {
+      this.setState(() => ({
+        todos: res
+      }));
+    })
+    .catch(err => {
+      if(err) throw err;
+    })
   }
 
-  callApi = async () => {
-    const response = await fetch('/api/hello');
-    const body = await response.json();
-
-    if (response.status !== 200) throw Error(body.message);
-
-    return body;
-  };
-
   render() {
+    const {todos} = this.state;
+    console.log(todos)
     return (
       <div className="App">
         <header>
           <h1>Yesterday u said tomorrow</h1>
         </header>
-        <p>{this.state.response}</p>
+        {todos.map(todo => <p>todo</p>)}
       </div>
     );
   }

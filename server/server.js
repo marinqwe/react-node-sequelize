@@ -25,17 +25,16 @@ const Todo = sequelize.define('todo', {
     todoName: Sequelize.STRING
 });
 
-app.post('/api/todos', (req, res) => {
+app.post('/todos', (req, res) => {
     // const todo = req.body;
-    console.log(req);
     // sequelize.sync()
     //     .then(() => {
     //         Todo.create(todo)
     //     })
 });
 
-app.get('/api/hello', (req, res) => {
-    res.send({ express: 'initiate sequelizing' });
+app.get('/todos', (req, res) => {
+    res.send({error: false, data: ['qwer', 'lmao'], message: 'List of todos'});
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
