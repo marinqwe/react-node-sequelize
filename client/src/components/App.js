@@ -24,7 +24,7 @@ class App extends Component {
     return (
       <div className="App">
         <header>
-          <h1>People with dogs</h1>
+          <h1>Yesterday u said tomorrow</h1>
         </header>
         <p>{this.state.response}</p>
       </div>
