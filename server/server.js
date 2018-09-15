@@ -21,20 +21,85 @@ sequelize
         console.log('Failed: ', err);
     });
 
-const Todo = sequelize.define('todo', {
-    todoName: Sequelize.STRING
+const Todo = sequelize.define(
+    'todo',
+    {
+        todoName: {
+            type: Sequelize.STRING,
+            unique: true,
+            allowNull: false,
+            set: function(value) {
+                this.setDataValue('todoName', value);
+            }
+        },
+        todoId: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        }
+    },
+    {
+        timestamps: false
+    }
+);
+
+// CREATE
+app.post('/todos/add', (req, res) => {
+    let todo = req.body.data;
+    // console.log(todo);
+    Todo.sync()
+        .then(() =>
+            Todo.create({
+                todoName: todo
+            })
+        )
+        .then(() => {
+            res.send(req.config);
+        });
 });
 
-app.post('/todos', (req, res) => {
-    // const todo = req.body;
-    // sequelize.sync()
-    //     .then(() => {
-    //         Todo.create(todo)
-    //     })
+//UPDATE
+app.put('/todos/update', (req, res) => {
+    const { todoName, id } = req.body.data;
+
+    console.log(req.body.data);
+    Todo.update(
+        {
+            todoName: todoName
+        },
+        {
+            where: { todoId: id }
+        }
+    ).then(todosUpdated => {
+        res.json(todosUpdated);
+    });
 });
 
+//DELETE
+app.delete('/todos/delete/:id', (req, res) => {
+    let id = req.params.id;
+    Todo.destroy({
+        where: {
+            todoId: id
+        }
+    })
+        .then(deleted => {
+            console.log('Success, deleted: ', deleted);
+            res.send(req.config);
+        })
+        .catch(err => {
+            if (err) throw err;
+        });
+});
+
+// READ
 app.get('/todos', (req, res) => {
-    res.send({error: false, data: ['qwer', 'lmao'], message: 'List of todos'});
+    Todo.findAll().then(todos => {
+        // todos.forEach(todo => {
+        //     console.log(todo.dataValues);
+        // });
+        res.send({ error: false, data: todos });
+    });
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
