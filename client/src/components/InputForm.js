@@ -1,16 +1,16 @@
 import React from 'react';
 import './App.css';
 
-const InputForm = props => (
-    <form className="form" onSubmit={e => props.onSubmit(e)}>
+const InputForm = ({ onSubmit, updating, onChange, value}) => (
+    <form className="form" onSubmit={e => onSubmit(e)}>
         <input
             className="input"
-            placeholder={!props.updating ? "Add a todo..." : "Update todo..."}
+            placeholder={!updating ? "Add a todo..." : "Update todo..."}
             type="text"
-            onChange={props.onChange}
-            value={props.value}
+            onChange={onChange}
+            value={value}
         />
-        {props.updating ? <button>Update</button> : <button>Add</button>}
+        {updating ? <button>Update</button> : <button>Add</button>}
     </form>
 );
 
