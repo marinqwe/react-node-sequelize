@@ -15,7 +15,6 @@ build
 .env.test.local
 .env.production.local
 /variables.env.sample
-/variables.env
 
 
 npm-debug.log*
