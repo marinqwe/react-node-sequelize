@@ -53,16 +53,22 @@ class App extends Component {
                 }));
             });
     };
-    updateTodo = id => {
+    updateTodo = () => {
         const url = 'todos/update';
         const { inputValue, idToUpdate } = this.state;
         updateData(url, inputValue, idToUpdate)
-            .then((res) => {
-                console.log("updateData: ", res);
-                getData('todos')})
-            .catch(err => {
-                if(err) throw err;
+            .then(res => {
+                console.log('updateData: ', res);
+                return getData('todos');
             })
+            .then(res => {
+                this.setState(() => ({
+                    todos: res
+                }));
+            })
+            .catch(err => {
+                if (err) throw err;
+            });
     };
 
     render() {

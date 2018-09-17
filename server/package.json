@@ -1,12 +1,7 @@
 {
-  "name": "example-create-react-app-express",
+  "name": "react-node-sequelize",
   "version": "1.0.0",
-  "description": "Example on using create-react-app with a Node Express Backend",
-  "author": {
-    "name": "Esau Silva",
-    "email": "esausilva85@gmail.com",
-    "url": "https://esausilva.com"
-  },
+  "description": "Todo app with node,sequelize and react",
   "license": "MIT",
   "scripts": {
     "client": "cd ../client && yarn start",
@@ -15,8 +10,8 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "dotenv": "^6.0.0",
     "express": "^4.16.2",
-    "mysql": "^2.16.0",
     "mysql2": "^1.6.1",
     "sequelize": "^4.38.0"
   },

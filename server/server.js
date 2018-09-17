@@ -1,15 +1,16 @@
 const express = require('express');
-const mysql = require('mysql');
+require('dotenv').config({ path: '../variables.env.sample'});
 const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.port || 5000;
 const Sequelize = require('sequelize');
 
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const sequelize = new Sequelize('tododb', 'root', 'marin123', {
-    host: 'localhost',
+const sequelize = new Sequelize('tododb', process.env.DB_USER, process.env.DB_PASS, {
+    host: process.env.DB_HOST,
     dialect: 'mysql'
 });
 sequelize
@@ -18,19 +19,16 @@ sequelize
         console.log('Connected');
     })
     .catch(err => {
-        console.log('Failed: ', err);
+        console.error(err);
     });
 
 const Todo = sequelize.define(
     'todo',
     {
         todoName: {
-            type: Sequelize.STRING,
+            type: Sequelize.TEXT,
             unique: true,
-            allowNull: false,
-            set: function(value) {
-                this.setDataValue('todoName', value);
-            }
+            allowNull: false
         },
         todoId: {
             type: Sequelize.INTEGER,
@@ -46,23 +44,20 @@ const Todo = sequelize.define(
 // CREATE
 app.post('/todos/add', (req, res) => {
     let todo = req.body.data;
-    // console.log(todo);
-    Todo.sync()
-        .then(() =>
-            Todo.create({
-                todoName: todo
-            })
-        )
+    Todo.create({
+        todoName: todo
+    })
         .then(() => {
             res.send(req.config);
+        })
+        .catch(err => {
+            throw err;
         });
 });
 
 //UPDATE
 app.put('/todos/update', (req, res) => {
     const { todoName, id } = req.body.data;
-
-    console.log(req.body.data);
     Todo.update(
         {
             todoName: todoName
@@ -84,20 +79,16 @@ app.delete('/todos/delete/:id', (req, res) => {
         }
     })
         .then(deleted => {
-            console.log('Success, deleted: ', deleted);
-            res.send(req.config);
+            res.json(deleted);
         })
         .catch(err => {
-            if (err) throw err;
+            throw err;
         });
 });
 
 // READ
 app.get('/todos', (req, res) => {
     Todo.findAll().then(todos => {
-        // todos.forEach(todo => {
-        //     console.log(todo.dataValues);
-        // });
         res.send({ error: false, data: todos });
     });
 });
