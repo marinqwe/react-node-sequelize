@@ -1,4 +1,14 @@
 Install server and client dependencies
+add a config.json into server/config with database credentials
+{
+    "development": {
+        "username": "",
+        "password": "",
+        "database": "",
+        "host": "",
+        "dialect": ""
+    }
+}
 
 ```
 cd server
