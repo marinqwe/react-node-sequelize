@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const bodyParser = require('body-parser');
-const Todo = require('../../models/Todo');
+const Todo = ('../../models/todo.js');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 
