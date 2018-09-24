@@ -1,4 +1,4 @@
-Install server and client dependencies
+
 add a config.json into server/config with database credentials
 {
     "development": {
@@ -9,6 +9,8 @@ add a config.json into server/config with database credentials
         "dialect": ""
     }
 }
+
+Install server and client dependencies
 
 ```
 cd server
