@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const bodyParser = require('body-parser');
-const db = require('../../models/todo');
+const db = require('../../models/index');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 
@@ -28,7 +28,7 @@ router.post('/todos/add', (req, res) => {
 //UPDATE
 router.put('/todos/update', (req, res) => {
     const { todoName, id } = req.body.data;
-    Todo.update(
+    db.Todo.update(
         {
             todoName: todoName
         },
@@ -43,7 +43,7 @@ router.put('/todos/update', (req, res) => {
 //DELETE
 router.delete('/todos/delete/:id', (req, res) => {
     let id = req.params.id;
-    Todo.destroy({
+    db.Todo.destroy({
         where: {
             todoId: id
         }
