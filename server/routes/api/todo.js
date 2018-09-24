@@ -1,12 +1,12 @@
 const router = require('express').Router();
 const bodyParser = require('body-parser');
-const Todo = ('../../models/todo.js');
+const db = require('../../models/todo');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 
 // READ
 router.get('/todos', (req, res) => {
-    Todo.findAll().then(todos => {
+    db.Todo.findAll().then(todos => {
         res.send({ error: false, data: todos });
     });
 });
@@ -14,7 +14,7 @@ router.get('/todos', (req, res) => {
 // CREATE
 router.post('/todos/add', (req, res) => {
     let todo = req.body.data;
-    Todo.create({
+    db.Todo.create({
         todoName: todo
     })
         .then(() => {
