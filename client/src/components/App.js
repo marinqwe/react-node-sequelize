@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
 import { getData, removeData, createData, updateData } from './Axios';
-import './App.css';
+import '../styles/App.css';
 import Form from './InputForm';
+import ListItem from './ListItem';
+import Error from './Error';
+import Spinner from './Spinner';
 
 class App extends Component {
     state = {
         todos: [],
         inputValue: '',
-        updating: false,
-        idToUpdate: 0
+        isUpdating: false,
+        isLoading: true,
+        idToUpdate: 0,
+        error: '',
+        dbErr: ''
     };
 
     onValueChange = e => {
@@ -22,25 +28,40 @@ class App extends Component {
         getData(url)
             .then(res => {
                 this.setState(() => ({
-                    todos: res
+                    todos: res,
+                    isLoading: false
                 }));
             })
-            .catch(err => {
-                if (err) throw err;
+            .catch(error => {
+                this.setState(() => ({
+                    error,
+                    isLoading: false
+                }));
             });
     }
     addTodo = e => {
         e.preventDefault();
         const url = 'todos/add';
         let inputValue = this.state.inputValue;
-        createData(url, inputValue)
-            .then(() => getData('todos'))
-            .then(res => {
-                this.setState(() => ({
-                    todos: res,
-                    inputValue: ''
-                }));
-            });
+        if (!inputValue || inputValue.trim() === '') {
+            this.setState(() => ({
+                error: 'Please enter a value to add a todo...'
+            }));
+        } else {
+            createData(url, inputValue)
+                .then(() => getData('todos'))
+                .then(res => {
+                    this.setState(() => ({
+                        todos: res,
+                        inputValue: ''
+                    }));
+                })
+                .catch(error => {
+                    this.setState(() => ({
+                        error
+                    }));
+                });
+        }
     };
     removeTodo = id => {
         const url = `todos/delete/${id}`;
@@ -50,6 +71,11 @@ class App extends Component {
             .then(res => {
                 this.setState(() => ({
                     todos: res
+                }));
+            })
+            .catch(error => {
+                this.setState(() => ({
+                    error
                 }));
             });
     };
@@ -66,41 +92,47 @@ class App extends Component {
                     todos: res
                 }));
             })
-            .catch(err => {
-                if (err) throw err;
+            .catch(error => {
+                this.setState(() => ({
+                    error
+                }));
             });
+    };
+    onUpdating = id => {
+        this.setState(() => ({
+            isUpdating: true,
+            idToUpdate: id
+        }));
     };
 
     render() {
-        const { todos, inputValue, updating } = this.state;
+        const { todos, inputValue, isUpdating, isLoading, error } = this.state;
+        const errMsg = 'Soemthing went wrong.';
+
+        if (error) {
+            return <Error message={errMsg} error={error} />;
+        }
+        if (isLoading) {
+            return <Spinner />;
+        }
         return (
             <div className="App">
                 <h1 className="header">Title 123</h1>
-                {!updating ? (
+                {!isUpdating ? (
                     <div>
                         <Form
                             onSubmit={this.addTodo}
                             value={inputValue}
                             onChange={this.onValueChange}
-                            updating={updating}
+                            isUpdating={isUpdating}
                         />
                         {todos.map(todo => (
-                            <div className="todo" key={todo.todoId}>
-                                <div>{todo.todoName}</div>
-                                <div>
-                                    <button
-                                        onClick={() => {
-                                            this.setState(() => ({
-                                                updating: true,
-                                                idToUpdate: todo.todoId
-                                            }));
-                                        }}
-                                    >
-                                        Change
-                                    </button>
-                                    <button onClick={() => this.removeTodo(todo.todoId)}>Remove</button>
-                                </div>
-                            </div>
+                            <ListItem
+                                key={todo.todoId}
+                                value={todo}
+                                onUpdating={this.onUpdating}
+                                removeTodo={this.removeTodo}
+                            />
                         ))}
                     </div>
                 ) : (
@@ -108,7 +140,7 @@ class App extends Component {
                         onSubmit={this.updateTodo}
                         value={inputValue}
                         onChange={this.onValueChange}
-                        updating={updating}
+                        isUpdating={isUpdating}
                     />
                 )}
             </div>
