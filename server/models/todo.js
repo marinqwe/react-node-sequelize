@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
     );
     Todo.associate = function(models) {
         // associations can be defined here
+        Todo.hasOne(models.Task, {
+            foreignKey: 'todosId',
+            onDelete: 'CASCADE'
+        });
     };
     return Todo;
 };

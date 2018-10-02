@@ -12,6 +12,6 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(require('./routes/api/todo'));
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, () => console.log(`Running on port ${port}`));
 
 module.exports = app;

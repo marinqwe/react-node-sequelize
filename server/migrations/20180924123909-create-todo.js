@@ -3,15 +3,15 @@ module.exports = {
     up: (queryInterface, Sequelize) => {
         return queryInterface.createTable('Todos', {
             todoName: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
                 allowNull: false,
                 unique: true
             },
             todoId: {
-                type: DataTypes.UUID,
+                type: Sequelize.UUID,
                 allowNull: false,
                 primaryKey: true,
-                defaultValue: DataTypes.UUIDV4
+                defaultValue: Sequelize.UUIDV4
             },
             createdAt: {
                 allowNull: false,
