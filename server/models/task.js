@@ -4,11 +4,11 @@ module.exports = (sequelize, DataTypes) => {
         'Task',
         {
             id: {
-                type: DataTypes.UUID,
+                type: DataTypes.INTEGER,
                 allowNull: false,
                 primaryKey: true,
-                unique: true,
-                defaultValue: DataTypes.UUIDV4
+                autoIncrement: true,
+                unique: true
             },
             done: DataTypes.BOOLEAN,
             description: DataTypes.TEXT

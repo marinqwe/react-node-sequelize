@@ -1,6 +1,5 @@
 client/node_modules
 server/node_modules
-server/config/config.json
 
 .DS_Store
 .env.local

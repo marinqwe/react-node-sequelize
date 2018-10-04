@@ -8,10 +8,10 @@ module.exports = {
                 unique: true
             },
             todoId: {
-                type: Sequelize.UUID,
+                type: Sequelize.INTEGER,
                 allowNull: false,
                 primaryKey: true,
-                defaultValue: Sequelize.UUIDV4
+                autoIncrement: true
             },
             createdAt: {
                 allowNull: false,
