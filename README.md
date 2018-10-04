@@ -1,15 +1,7 @@
 
-add a config.json into server/config with database credentials
+Navigate to server/config/ and remove the .example extension on config.json,
 
-{
-    "development": {
-        "username": "xxx",
-        "password": "xxx",
-        "database": "xxx",
-        "host": "xxx",
-        "dialect": "xxx"
-    }
-}
+fill out the development object with your database options.
 
 Install server and client dependencies
 
