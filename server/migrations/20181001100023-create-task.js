@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable('Tasks', {
+        return queryInterface.createTable('tasks', {
             id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
@@ -14,14 +14,14 @@ module.exports = {
             description: {
                 type: Sequelize.TEXT
             },
-            todosId: {
-                type: Sequelize.UUID,
-                onDelete: 'CASCADE',
-                references: {
-                    model: 'Todos',
-                    key: 'todoId'
-                }
-            },
+            // todosId: {
+            //     type: Sequelize.INTEGER,
+            //     onDelete: 'CASCADE',
+            //     references: {
+            //         model: 'todos',
+            //         key: 'id'
+            //     }
+            // }
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getData, removeData, createData, updateData } from './Axios';
+import { getData, removeData, createData, updateData } from '../API';
 import '../styles/App.css';
 import Form from './InputForm';
 import ListItem from './ListItem';
@@ -24,8 +24,7 @@ class App extends Component {
         }));
     };
     componentDidMount() {
-        const url = 'todos';
-        getData(url)
+        getData()
             .then(res => {
                 this.setState(() => ({
                     todos: res,
@@ -41,15 +40,13 @@ class App extends Component {
     }
     addTodo = e => {
         e.preventDefault();
-        const url = 'todos/add';
         let inputValue = this.state.inputValue;
         if (!inputValue || inputValue.trim() === '') {
             this.setState(() => ({
                 error: 'Please enter a value to add a todo...'
             }));
         } else {
-            createData(url, inputValue)
-                .then(() => getData('todos'))
+            createData(inputValue)
                 .then(res => {
                     this.setState(() => ({
                         todos: res,
@@ -64,10 +61,8 @@ class App extends Component {
         }
     };
     removeTodo = id => {
-        const url = `todos/delete/${id}`;
         const todoId = id;
-        removeData(url, todoId)
-            .then(() => getData('todos'))
+        removeData(todoId)
             .then(res => {
                 this.setState(() => ({
                     todos: res
@@ -79,24 +74,30 @@ class App extends Component {
                 }));
             });
     };
-    updateTodo = () => {
-        const url = 'todos/update';
+    updateTodo = e => {
+        e.preventDefault();
         const { inputValue, idToUpdate } = this.state;
-        updateData(url, inputValue, idToUpdate)
-            .then(res => {
-                console.log('updateData: ', res);
-                return getData('todos');
-            })
-            .then(res => {
-                this.setState(() => ({
-                    todos: res
-                }));
-            })
-            .catch(error => {
-                this.setState(() => ({
-                    error
-                }));
-            });
+        if (!inputValue || inputValue.trim() === '') {
+            this.setState(() => ({
+                error: 'Please enter a value to update a todo...'
+            }));
+        } else {
+            updateData(inputValue, idToUpdate)
+                .then(() => getData('todos'))
+                .then(res => {
+                    console.log('updated: ', res);
+                    this.setState(() => ({
+                        todos: res,
+                        inputValue: '',
+                        isUpdating: false
+                    }));
+                })
+                .catch(error => {
+                    this.setState(() => ({
+                        error
+                    }));
+                });
+        }
     };
     onUpdating = id => {
         this.setState(() => ({
@@ -108,7 +109,7 @@ class App extends Component {
     render() {
         const { todos, inputValue, isUpdating, isLoading, error } = this.state;
         const errMsg = 'Soemthing went wrong.';
-
+        console.log(todos);
         if (error) {
             return <Error message={errMsg} error={error} />;
         }
@@ -128,7 +129,7 @@ class App extends Component {
                         />
                         {todos.map(todo => (
                             <ListItem
-                                key={todo.todoId}
+                                key={todo.id}
                                 value={todo}
                                 onUpdating={this.onUpdating}
                                 removeTodo={this.removeTodo}

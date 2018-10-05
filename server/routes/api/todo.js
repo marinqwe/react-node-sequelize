@@ -6,7 +6,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 // READ
 router.get('/todos', (req, res) => {
-    db.Todo.findAll().then(todos => {
+    db.todo.findAll().then(todos => {
         res.send({ error: false, data: todos });
     });
 });
@@ -14,9 +14,10 @@ router.get('/todos', (req, res) => {
 // CREATE
 router.post('/todos/add', (req, res) => {
     let todo = req.body.data;
-    db.Todo.create({
-        todoName: todo
-    })
+    db.todo
+        .create({
+            todoName: todo
+        })
         .then(() => {
             res.send(req.config);
         })
@@ -28,26 +29,30 @@ router.post('/todos/add', (req, res) => {
 //UPDATE
 router.put('/todos/update', (req, res) => {
     const { todoName, id } = req.body.data;
-    db.Todo.update(
-        {
-            todoName: todoName
-        },
-        {
-            where: { todoId: id }
-        }
-    ).then(todosUpdated => {
-        res.json(todosUpdated);
-    });
+    db.todo
+        .update(
+            {
+                todoName: todoName
+            },
+            {
+                where: { id: id }
+            }
+        )
+        .then(todoUpdated => {
+            console.log(JSON.parse(todoUpdated));
+            res.json(todoUpdated);
+        });
 });
 
 //DELETE
 router.delete('/todos/delete/:id', (req, res) => {
-    let id = req.params.id;
-    db.Todo.destroy({
-        where: {
-            todoId: id
-        }
-    })
+    const todoId = req.params.id;
+    db.todo
+        .destroy({
+            where: {
+                id: todoId
+            }
+        })
         .then(deleted => {
             res.json(deleted);
         })
