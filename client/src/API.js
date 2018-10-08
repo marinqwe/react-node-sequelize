@@ -19,28 +19,14 @@ export const getData = () =>
         });
 
 export const removeData = id =>
-    axios
-        .delete(`http://localhost:3000/${url.removeData}/${id}`)
-        .then(() => getData('todos'))
-        .then(res => {
-            return res;
-        })
-        .catch(err => {
-            throw err;
-        });
+    axios.delete(`http://localhost:3000/${url.removeData}/${id}`).then(() => getData('todos'));
 
 export const createData = inputValue =>
     axios
         .post(`http://localhost:3000/${url.createData}`, {
             data: inputValue
         })
-        .then(() => getData('todos'))
-        .then(res => {
-            return res;
-        })
-        .catch(err => {
-            throw err;
-        });
+        .then(() => getData('todos'));
 
 export const updateData = (inputValue, id) =>
     axios
@@ -50,11 +36,4 @@ export const updateData = (inputValue, id) =>
                 id
             }
         })
-        .then(res => {
-            const data = JSON.parse(res.config.data);
-            const updatedTodo = data.data.todoName;
-            return updatedTodo;
-        })
-        .catch(err => {
-            throw err;
-        });
+        .then(() => getData('todos'));

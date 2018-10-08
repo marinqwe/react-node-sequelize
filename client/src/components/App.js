@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import ReactDom from 'react-dom';
 import { getData, removeData, createData, updateData } from '../API';
 import '../styles/App.css';
 import Form from './InputForm';
 import ListItem from './ListItem';
 import Error from './Error';
 import Spinner from './Spinner';
+import Modal from 'react-responsive-modal';
 
 class App extends Component {
     state = {
@@ -83,9 +85,7 @@ class App extends Component {
             }));
         } else {
             updateData(inputValue, idToUpdate)
-                .then(() => getData('todos'))
                 .then(res => {
-                    console.log('updated: ', res);
                     this.setState(() => ({
                         todos: res,
                         inputValue: '',
@@ -105,11 +105,16 @@ class App extends Component {
             idToUpdate: id
         }));
     };
+    closeModal = () => {
+        this.setState(() => ({
+            isUpdating: false,
+            idToUpdate: 0
+        }));
+    };
 
     render() {
         const { todos, inputValue, isUpdating, isLoading, error } = this.state;
         const errMsg = 'Soemthing went wrong.';
-        console.log(todos);
         if (error) {
             return <Error message={errMsg} error={error} />;
         }
@@ -118,32 +123,26 @@ class App extends Component {
         }
         return (
             <div className="App">
+                <Modal open={isUpdating} onClose={this.closeModal}>
+                    <h2>Simple modal hey</h2>
+                </Modal>
                 <h1 className="header">Title 123</h1>
-                {!isUpdating ? (
-                    <div>
-                        <Form
-                            onSubmit={this.addTodo}
-                            value={inputValue}
-                            onChange={this.onValueChange}
-                            isUpdating={isUpdating}
-                        />
-                        {todos.map(todo => (
-                            <ListItem
-                                key={todo.id}
-                                value={todo}
-                                onUpdating={this.onUpdating}
-                                removeTodo={this.removeTodo}
-                            />
-                        ))}
-                    </div>
-                ) : (
+                <div>
                     <Form
-                        onSubmit={this.updateTodo}
+                        onSubmit={this.addTodo}
                         value={inputValue}
                         onChange={this.onValueChange}
                         isUpdating={isUpdating}
                     />
-                )}
+                    {todos.map(todo => (
+                        <ListItem
+                            key={todo.id}
+                            value={todo}
+                            onUpdating={this.onUpdating}
+                            removeTodo={this.removeTodo}
+                        />
+                    ))}
+                </div>
             </div>
         );
     }
