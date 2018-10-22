@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
     const Task = sequelize.define(
-        'task',
+        'Task',
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -10,17 +10,27 @@ module.exports = (sequelize, DataTypes) => {
                 autoIncrement: true,
                 unique: true
             },
-            done: DataTypes.BOOLEAN,
-            description: DataTypes.TEXT
+            done: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false
+            },
+            description: DataTypes.TEXT,
+            TodoId: {
+                type: DataTypes.INTEGER,
+                field: 'todo_id'
+            }
         },
-        {}
+        {
+            tableName: 'tasks'
+        }
     );
     Task.associate = function(models) {
         // associations can be defined here
-        // Task.belongsTo(models.Todo, {
-        //     foreignKey: 'todosId',
-        //     onDelete: 'CASCADE'
-        // }); 
+        Task.belongsTo(models.Todo, {
+            foreignKey: 'todo_id',
+            foreignKeyConstraint: true,
+            onDelete: 'cascade'
+        });
     };
     return Task;
 };

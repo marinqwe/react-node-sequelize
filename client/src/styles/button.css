@@ -1,11 +1,12 @@
 .button {
     background-color: #5069bb;
+    width: 100px;
     border: none;
     color: white;
     padding: 10px 20px;
     text-align: center;
     font-size: 14px;
-    margin: 0 1px 0 2px;
+    margin: 5px auto;
     opacity: 0.6;
     transition: 0.3s;
     display: inline-block;
@@ -32,5 +33,24 @@
     cursor: pointer;
 }
 .todoBtn:hover {
+    opacity: 1;
+}
+
+.toggleBtn{
+    background-color: #5069bb;
+    border: none;
+    color: white;
+    padding: 5px 8px;
+    text-align: center;
+    font-size: 14px;
+    margin: 0 1px 0 2px;
+    opacity: 0.6;
+    transition: 0.3s;
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
+    width: 25px;
+}
+.togglebtn:hover {
     opacity: 1;
 }

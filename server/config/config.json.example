@@ -1,6 +1,6 @@
 {
     "development": {
-        "username": "eg. root",
+        "username": "e.g. root",
         "password": "your database password",
         "database": "database name",
         "host": "127.0.0.1 / localhost / wherever your app is hosted",

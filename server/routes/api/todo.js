@@ -1,22 +1,29 @@
 const router = require('express').Router();
 const bodyParser = require('body-parser');
-const db = require('../../models/index');
+const { Todo, Task } = require('../../models');
+const models = require('../../models/index');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 
 // READ
 router.get('/todos', (req, res) => {
-    db.todo.findAll().then(todos => {
+    Todo.findAll({
+        include: [Task]
+    }).then(todos => {
         res.send({ error: false, data: todos });
     });
 });
 
 // CREATE
 router.post('/todos/add', (req, res) => {
-    let todo = req.body.data;
-    db.todo
-        .create({
-            todoName: todo
+    let { todoName, todoDesc: description } = req.body.data;
+    Todo.create({
+        todoName
+    })
+        .then(todo => {
+            todo.createTask({
+                description
+            });
         })
         .then(() => {
             res.send(req.config);
@@ -28,34 +35,56 @@ router.post('/todos/add', (req, res) => {
 
 //UPDATE
 router.put('/todos/update', (req, res) => {
-    const { todoName, id } = req.body.data;
-    db.todo
-        .update(
-            {
-                todoName: todoName
+    const { inputValue, id } = req.body.data;
+    if (typeof inputValue === 'boolean') {
+        Todo.find({
+            where: {
+                id
             },
-            {
-                where: { id: id }
-            }
-        )
-        .then(todoUpdated => {
-            console.log(JSON.parse(todoUpdated));
-            res.json(todoUpdated);
-        });
+            include: [{ model: Task }]
+        })
+            .then(todo => {
+                todo.Task.updateAttributes({ done: inputValue });
+            })
+            .then(result => res.json(result))
+            .catch(err => {
+                throw err;
+            });
+    } else {
+        const { todoDesc, todoName } = inputValue;
+        Todo.find({
+            where: {
+                id
+            },
+            include: [{ model: Task }]
+        })
+            .then(todo => {
+                return Promise.all([
+                    todo.updateAttributes({ todoName: todoName }),
+                    todo.Task.updateAttributes({ description: todoDesc })
+                ]);
+            })
+            .then(result => res.json(result))
+            .catch(err => {
+                throw err;
+            });
+    }
 });
 
 //DELETE
 router.delete('/todos/delete/:id', (req, res) => {
-    const todoId = req.params.id;
-    db.todo
-        .destroy({
-            where: {
-                id: todoId
-            }
+    const id = req.params.id;
+
+    Todo.find({
+        where: {
+            id
+        },
+        include: [{ model: Task }]
+    })
+        .then(todo => {
+            return Promise.all([todo.destroy(), todo.Task.destroy()]);
         })
-        .then(deleted => {
-            res.json(deleted);
-        })
+        .then(deleted => res.json(deleted))
         .catch(err => {
             throw err;
         });

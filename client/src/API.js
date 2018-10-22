@@ -32,7 +32,7 @@ export const updateData = (inputValue, id) =>
     axios
         .put(`http://localhost:3000/${url.updateData}`, {
             data: {
-                todoName: inputValue,
+                inputValue,
                 id
             }
         })

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import ReactDom from 'react-dom';
 import { getData, removeData, createData, updateData } from '../API';
 import '../styles/App.css';
 import Form from './InputForm';
+import UpdateForm from './UpdateForm';
 import ListItem from './ListItem';
 import Error from './Error';
 import Spinner from './Spinner';
@@ -11,18 +11,22 @@ import Modal from 'react-responsive-modal';
 class App extends Component {
     state = {
         todos: [],
-        inputValue: '',
+        inputValue: {
+            todoName: '',
+            todoDesc: ''
+        },
         isUpdating: false,
         isLoading: true,
         idToUpdate: 0,
-        error: '',
-        dbErr: ''
+        error: ''
     };
 
     onValueChange = e => {
         let value = e.target.value;
+        const newVal = { ...this.state.inputValue };
+        newVal[e.target.name] = value;
         this.setState(() => ({
-            inputValue: value
+            inputValue: newVal
         }));
     };
     componentDidMount() {
@@ -43,7 +47,7 @@ class App extends Component {
     addTodo = e => {
         e.preventDefault();
         let inputValue = this.state.inputValue;
-        if (!inputValue || inputValue.trim() === '') {
+        if (!inputValue.todoName || inputValue.todoName.trim() === '') {
             this.setState(() => ({
                 error: 'Please enter a value to add a todo...'
             }));
@@ -52,7 +56,10 @@ class App extends Component {
                 .then(res => {
                     this.setState(() => ({
                         todos: res,
-                        inputValue: ''
+                        inputValue: {
+                            todoName: '',
+                            todoDesc: ''
+                        }
                     }));
                 })
                 .catch(error => {
@@ -79,7 +86,7 @@ class App extends Component {
     updateTodo = e => {
         e.preventDefault();
         const { inputValue, idToUpdate } = this.state;
-        if (!inputValue || inputValue.trim() === '') {
+        if (!inputValue.todoName || inputValue.todoName.trim() === '') {
             this.setState(() => ({
                 error: 'Please enter a value to update a todo...'
             }));
@@ -88,7 +95,10 @@ class App extends Component {
                 .then(res => {
                     this.setState(() => ({
                         todos: res,
-                        inputValue: '',
+                        inputValue: {
+                            todoName: '',
+                            todoDesc: ''
+                        },
                         isUpdating: false
                     }));
                 })
@@ -108,31 +118,42 @@ class App extends Component {
     closeModal = () => {
         this.setState(() => ({
             isUpdating: false,
-            idToUpdate: 0
+            idToUpdate: 0,
+            inputValue: {
+                todoName: '',
+                todoDesc: ''
+            }
         }));
     };
 
     render() {
         const { todos, inputValue, isUpdating, isLoading, error } = this.state;
-        const errMsg = 'Soemthing went wrong.';
+        const errMsg = 'ERROR: ';
         if (error) {
             return <Error message={errMsg} error={error} />;
         }
         if (isLoading) {
             return <Spinner />;
         }
+        
         return (
             <div className="App">
-                <Modal open={isUpdating} onClose={this.closeModal}>
-                    <h2>Simple modal hey</h2>
+                <Modal open={isUpdating} onClose={this.closeModal} center>
+                    <div className="updateText">Update your todo</div>
+                    <UpdateForm
+                        onSubmit={this.updateTodo}
+                        value={inputValue}
+                        onChange={this.onValueChange}
+                        isUpdating={isUpdating}
+                    />
                 </Modal>
                 <h1 className="header">Title 123</h1>
                 <div>
                     <Form
                         onSubmit={this.addTodo}
-                        value={inputValue}
                         onChange={this.onValueChange}
                         isUpdating={isUpdating}
+                        value={inputValue}
                     />
                     {todos.map(todo => (
                         <ListItem

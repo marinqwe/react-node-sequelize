@@ -7,26 +7,23 @@
 
 .header {
     text-align: center;
-    margin-bottom: 50px;
+    font-size: 44px;
+    padding-bottom: 40px;
 }
 
-.todo {
-    display: flex;
-    margin: 10px 25rem;
-    padding: 10px 15px 5px 15px;
-    border-radius: 3px;
-    background-color: rgb(214, 216, 218);
-    align-items: baseline;
-    justify-content: space-between;
+.form-container {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .form {
     display: flex;
-    width: 40vw;
-    margin: 10px 25rem;
-    padding: 10px 15px;
+    flex-direction: column;
+    width: 400px;
     border-radius: 3px;
     background-color: rgb(214, 216, 218);
+    padding: 10px 10px 0 10px;
     justify-content: space-between;
 }
 .input {
@@ -34,6 +31,7 @@
     border-bottom: 1px solid #5069bb;
     font-size: 20px;
     padding: 5px 5px 3px 5px;
+    margin: 3px;
     opacity: 0.8;
 }
 
@@ -49,5 +47,11 @@
     text-shadow: 0px 0px 7px rgba(0, 0, 0, 1);
     color: rgba(26, 20, 20, 0.87);
     font-size: 1.5rem;
+    text-align: center;
+}
+
+.updateText {
+    padding-bottom: 30px;
+    font-size: 36px;
     text-align: center;
 }

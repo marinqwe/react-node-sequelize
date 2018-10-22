@@ -14,14 +14,6 @@ module.exports = {
             description: {
                 type: Sequelize.TEXT
             },
-            // todosId: {
-            //     type: Sequelize.INTEGER,
-            //     onDelete: 'CASCADE',
-            //     references: {
-            //         model: 'todos',
-            //         key: 'id'
-            //     }
-            // }
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE
@@ -29,10 +21,13 @@ module.exports = {
             updatedAt: {
                 allowNull: false,
                 type: Sequelize.DATE
+            },
+            todo_id: {
+                type: Sequelize.INTEGER
             }
         });
     },
     down: (queryInterface, Sequelize) => {
-        return queryInterface.dropTable('Tasks');
+        return queryInterface.dropTable('tasks');
     }
 };
