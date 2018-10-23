@@ -13,8 +13,31 @@
     padding: 5px;
     flex-direction: column;
 }
+.listContainerChecked{
+    background-color: rgb(188, 228, 161);
+    display: flex;
+    padding: 5px;
+    flex-direction: column;
+}
 
 .doneText{
     font-size: 16px;
     align-items: baseline;
+}
+.todoName{
+    font-size: 24px;
+    padding-left: 4px;
+    padding-bottom: 8px;
+}
+
+.todoLeftAlign{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 4px;
+}
+
+.todoDescription{
+    padding: 0 0 4px 12px;
+    font-size: 18px;
 }

@@ -44,32 +44,34 @@ class ListItem extends React.Component {
         const { isExtended, checked } = this.state;
 
         return (
-            <div className="listContainer">
+            <div className={!checked ? 'listContainer' : 'listContainerChecked'}>
                 <div className="todo">
-                    <button className="toggleBtn" onClick={() => this.toggleDesc()}>
-                        {!isExtended ? (
+                    <div className="todoLeftAlign">
+                        <div className="todoName">{todo.todoName}</div>
+                        <button className="toggleBtn" onClick={() => this.toggleDesc()}>
                             <div className="tooltip">
-                                +<span className="tooltiptext">Show description</span>
+                                {!isExtended ? '+' : '-'}
+                                <span className="tooltiptext">
+                                    {!isExtended ? 'Show description' : 'Hide description'}
+                                </span>
                             </div>
-                        ) : (
-                            <div className="tooltip">
-                                -<span className="tooltiptext">Hide description</span>
-                            </div>
-                        )}
-                    </button>
-                    <div>{todo.todoName}</div>
+                        </button>
+                    </div>
 
-                    <label className="container">
-                        <input type="checkbox" checked={checked} onClick={() => this.updateChecked()} />
-                        <span className="checkmark" />
-                        <div className="doneText">Done</div>
-                    </label>
                     <div>
+                        <label className="container">
+                            <input type="checkbox" checked={checked} onClick={() => this.updateChecked()} />
+                            <span className="checkmark" />
+                            <div>Done</div>
+                        </label>
+
                         <button className="todoBtn" onClick={() => onUpdating(todo.id)}>
                             EDIT
                         </button>
                         <button className="todoBtn" onClick={() => removeTodo(todo.id)}>
-                            ×
+                            <div className="tooltip">
+                                ×<span className="tooltiptext">Remove todo</span>
+                            </div>
                         </button>
                     </div>
                 </div>

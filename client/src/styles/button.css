@@ -51,6 +51,6 @@
     cursor: pointer;
     width: 25px;
 }
-.togglebtn:hover {
+.toggleBtn:hover {
     opacity: 1;
 }
