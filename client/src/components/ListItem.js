@@ -1,5 +1,6 @@
 import React from 'react';
 import { updateData } from '../API';
+import Spinner from './Spinner';
 import '../styles/ListItem.css';
 import '../styles/button.css';
 import '../styles/Tooltip.css';
@@ -8,15 +9,16 @@ import '../styles/Checkbox.css';
 class ListItem extends React.Component {
     state = {
         isExtended: false,
-        checked: false
+        checked: false,
+        isLoading: true
     };
     componentDidMount() {
         const done = this.props.value.Task.done;
-        if (done) {
-            this.setState(() => ({
-                checked: done
-            }));
-        }
+
+        this.setState(() => ({
+            checked: done,
+            isLoading: false
+        }));
     }
 
     toggleDesc = () => {
@@ -28,10 +30,11 @@ class ListItem extends React.Component {
     updateChecked = () => {
         const id = this.props.value.id;
         const checked = !this.state.checked;
+        console.log("Check'd");
         updateData(checked, id)
             .then(res => {
-                this.setState(() => ({
-                    checked: res[0].Task.done
+                this.setState((prevState) => ({
+                    checked: !prevState.checked
                 }));
             })
             .catch(err => {
@@ -41,7 +44,11 @@ class ListItem extends React.Component {
 
     render() {
         const { value: todo, onUpdating, removeTodo } = this.props;
-        const { isExtended, checked } = this.state;
+        const { isExtended, checked, isLoading } = this.state;
+
+        if (isLoading) {
+            return <Spinner />;
+        }
 
         return (
             <div className={!checked ? 'listContainer' : 'listContainerChecked'}>
@@ -60,7 +67,7 @@ class ListItem extends React.Component {
 
                     <div>
                         <label className="container">
-                            <input type="checkbox" checked={checked} onClick={() => this.updateChecked()} />
+                            <input type="checkbox" defaultChecked={checked} onClick={() => this.updateChecked()} />
                             <span className="checkmark" />
                             <div>Done</div>
                         </label>

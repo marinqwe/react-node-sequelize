@@ -9,20 +9,24 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.get('/todos', (req, res) => {
     Todo.findAll({
         include: [Task]
-    }).then(todos => {
-        res.send({ error: false, data: todos });
-    });
+    })
+        .then(todos => {
+            res.send({ error: false, data: todos });
+        })
+        .catch(err => {
+            throw err;
+        });
 });
 
 // CREATE
 router.post('/todos/add', (req, res) => {
-    let { todoName, todoDesc: description } = req.body.data;
+    let { todoName, todoDesc } = req.body.data;
     Todo.create({
-        todoName
+        todoName: todoName
     })
         .then(todo => {
             todo.createTask({
-                description
+                description: todoDesc
             });
         })
         .then(() => {
